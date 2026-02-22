@@ -52,10 +52,5 @@ img[alt="PLAY Barbados"],img[src*="header-daf642"],img[src*="6snMDJd"],.ins-head
 ::-webkit-scrollbar-thumb{background:#1e2740;border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:#7c3aed;}
 
-.ins-header__menu-item { position: relative; }
-.ins-header__menu-item::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 8px; background: transparent; z-index: 999; }
-.ins-header__menu-item.hover-locked .ins-header__dropdown,
-.ins-header__menu-item.hover-locked .ins-header__submenu,
-.ins-header__menu-item.hover-locked .ins-header__menu-dropdown,
-.ins-header__menu-item.hover-locked [class*='dropdown'],
-.ins-header__menu-item.hover-locked [class*='submenu'] { display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+.ins-header__dropdown a,.ins-header__submenu a,.ins-header__menu-dropdown a,.ins-header__dropdown-item{pointer-events:auto !important;cursor:pointer !important;display:block !important;}
+.ins-header__dropdown,.ins-header__submenu,.ins-header__menu-dropdown,.ins-header__dropdown-wrap,.ins-header__dropdown-inner{pointer-events:auto !important;}

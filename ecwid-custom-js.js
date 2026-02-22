@@ -175,81 +175,12 @@
     document.head.appendChild(style);
   }
 
-  /* ── 5. DROPDOWN HOVER FIX ──────────────────── */
-  function fixDropdownHover() {
-    var DELAY = 250;
-
-    var ITEM_SELS = [
-      '.ins-header__menu-item',
-      '[class*="header__nav"] > li',
-      '[class*="nav__item"]',
-      '[class*="menu__item"]'
-    ];
-
-    var DROP_SELS = [
-      '.ins-header__dropdown',
-      '.ins-header__submenu',
-      '.ins-header__menu-dropdown',
-      '[class*="Dropdown"]',
-      '[class*="dropdown"]',
-      '[class*="submenu"]'
-    ];
-
-    function findDropdown(item) {
-      for (var i = 0; i < DROP_SELS.length; i++) {
-        try { var d = item.querySelector(DROP_SELS[i]); if (d) return d; } catch(e) {}
-      }
-      return null;
-    }
-
-    function getItems() {
-      for (var i = 0; i < ITEM_SELS.length; i++) {
-        try {
-          var els = document.querySelectorAll(ITEM_SELS[i]);
-          if (els.length > 0) return Array.from(els);
-        } catch(e) {}
-      }
-      return [];
-    }
-
-    function patchItem(item) {
-      var dropdown = findDropdown(item);
-      if (!dropdown || item._ddPatched) return;
-      item._ddPatched = true;
-
-      var timer = null;
-
-      function lock() {
-        clearTimeout(timer);
-        item.classList.add('hover-locked');
-      }
-      function unlock() {
-        timer = setTimeout(function() {
-          item.classList.remove('hover-locked');
-        }, DELAY);
-      }
-
-      item.addEventListener('mouseenter', lock);
-      item.addEventListener('mouseleave', unlock);
-      dropdown.addEventListener('mouseenter', lock);
-      dropdown.addEventListener('mouseleave', unlock);
-    }
-
-    function run() { getItems().forEach(patchItem); }
-
-    run();
-    setTimeout(run, 600);
-    setTimeout(run, 1800);
-    setTimeout(run, 4000);
-  }
-
   /* ── INIT ────────────────────────────────────── */
   function init() {
     applyFonts();
     forceDarkContainers();
     insertTicker();
     insertWhatsAppButton();
-    fixDropdownHover();
   }
 
   // Run on DOM ready
