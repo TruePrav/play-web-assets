@@ -139,9 +139,51 @@
     document.body.appendChild(btn);
   }
 
+  /* ── 5. FORCE DARK BACKGROUNDS ──────────────── */
+  // Nuclear option: catches Ecwid root containers + any white boxes
+  // the CSS Theme can't reach (store wrapper, static pages, etc.)
+  function forceDarkContainers() {
+    if (document.getElementById('play-dark-force')) return;
+    var style = document.createElement('style');
+    style.id = 'play-dark-force';
+    style.textContent = [
+      // Ecwid dynamic root container (ID starts with "my-store-")
+      '[id^="my-store-"],',
+      '[id^="ecwid-products-"],',
+      '.ecwid-overflow-fix,',
+      '.ecwid { background-color: #080b14 !important; }',
+
+      // All ins- page/layout/storefront containers
+      '[class*="ins-storefront"],',
+      '[class*="ins-layout"],',
+      '[class*="ins-page-"],',
+      '[class*="ins-static"] { background-color: #080b14 !important; }',
+
+      // Text elements inside store pages
+      '[class*="ins-page"] p,',
+      '[class*="ins-page"] span,',
+      '[class*="ins-page"] h1,',
+      '[class*="ins-page"] h2,',
+      '[class*="ins-page"] li',
+      '{ color: #e8eaf0 !important; }',
+
+      // Print button on policy pages
+      '[class*="ins-page"] button,',
+      '[class*="ins-page"] .ins-control__button',
+      '{ background: #1e2740 !important; color: #e8eaf0 !important;',
+      '  border: 1px solid #1e2740 !important; border-radius: 8px !important; }',
+
+      // Breadcrumb
+      '[class*="ins-breadcrumb"]',
+      '{ background: transparent !important; color: #6b7394 !important; }',
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
   /* ── INIT ────────────────────────────────────── */
   function init() {
     applyFonts();
+    forceDarkContainers();
     insertTicker();
     insertWhatsAppButton();
   }
@@ -156,6 +198,7 @@
   // Also re-run after Ecwid loads (it renders async)
   if (window.Ecwid) {
     Ecwid.OnAPILoaded.add(function() { setTimeout(init, 500); });
+    Ecwid.OnPageLoaded.add(function() { setTimeout(forceDarkContainers, 100); });
   } else {
     window.ecwid_onBodyDone = window.ecwid_onBodyDone || function() {};
     var origDone = window.ecwid_onBodyDone;
