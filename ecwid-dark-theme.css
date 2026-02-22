@@ -35,6 +35,7 @@ html,body{background-color:#080b14 !important;color:#ffffff !important;}
 #ecwid-products p,#ecwid-products label,#ecwid-products li,#ecwid-products td{color:#ffffff !important;}
 .ec-text-muted,#ecwid-products .ec-text-muted{color:#8b9ac0 !important;}
 #ecwid-products .ec-price-item,#ecwid-products .details-product-price__value{color:#00d4ff !important;}
+img[alt="PLAY Barbados"],.ins-header__logo-image,.ins-header__logo img{width:auto !important;height:90px !important;max-width:none !important;}
 .ins-header__menu-link,.ins-header__menu-link-title,.ins-header__menu-link span{color:#ffffff !important;font-weight:700 !important;}
 .ins-header__menu-link:hover .ins-header__menu-link-title,.ins-header__menu-link:hover{color:#00d4ff !important;}
 .ins-tile,.ins-tile__body,.ins-tile__wrap,.ins-tile__headline,.ins-tile__text,.ins-layout,.ins-layout__content,.ins-tile__description{color:#ffffff !important;}
