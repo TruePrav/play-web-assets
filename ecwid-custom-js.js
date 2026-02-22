@@ -140,42 +140,37 @@
   }
 
   /* ── 5. FORCE DARK BACKGROUNDS ──────────────── */
-  // Nuclear option: catches Ecwid root containers + any white boxes
-  // the CSS Theme can't reach (store wrapper, static pages, etc.)
+  // Targets the actual Ecwid ec-* class structure confirmed from live DOM inspection
   function forceDarkContainers() {
     if (document.getElementById('play-dark-force')) return;
     var style = document.createElement('style');
     style.id = 'play-dark-force';
     style.textContent = [
-      // Ecwid dynamic root container (ID starts with "my-store-")
-      '[id^="my-store-"],',
-      '[id^="ecwid-products-"],',
-      '.ecwid-overflow-fix,',
-      '.ecwid { background-color: #080b14 !important; }',
+      // Root containers (confirmed from live DOM)
+      '#ecwid-products, .ecwid, .ec-storefront-v3,',
+      '.ecwid-productBrowser, .ecwid-productBrowser-v3,',
+      '.ec-wrapper, .ec-store, .ec-store__content-wrapper',
+      '{ background-color: #080b14 !important; color: #e8eaf0 !important; }',
 
-      // All ins- page/layout/storefront containers
-      '[class*="ins-storefront"],',
-      '[class*="ins-layout"],',
-      '[class*="ins-page-"],',
-      '[class*="ins-static"] { background-color: #080b14 !important; }',
+      // Product detail containers
+      '.product-details, .product-details__top, .product-details__sidebar,',
+      '.product-details__gallery, .product-details__description,',
+      '.product-details-module, .product-details-module__content',
+      '{ background-color: #080b14 !important; }',
 
-      // Text elements inside store pages
-      '[class*="ins-page"] p,',
-      '[class*="ins-page"] span,',
-      '[class*="ins-page"] h1,',
-      '[class*="ins-page"] h2,',
-      '[class*="ins-page"] li',
+      // Text colour fixes
+      '.ec-header-h1,.ec-header-h2,.ec-header-h3,.ec-header-h4,.ec-header-h5,.ec-header-h6',
       '{ color: #e8eaf0 !important; }',
+      '.ec-text-muted, .breadcrumbs__link, .ec-link--muted',
+      '{ color: #6b7394 !important; }',
 
-      // Print button on policy pages
-      '[class*="ins-page"] button,',
-      '[class*="ins-page"] .ins-control__button',
-      '{ background: #1e2740 !important; color: #e8eaf0 !important;',
-      '  border: 1px solid #1e2740 !important; border-radius: 8px !important; }',
+      // Price cyan
+      '.ec-price-item, .details-product-price__value',
+      '{ color: #00d4ff !important; font-weight: 700 !important; }',
 
-      // Breadcrumb
-      '[class*="ins-breadcrumb"]',
-      '{ background: transparent !important; color: #6b7394 !important; }',
+      // Footer
+      '.ec-footer, .ec-footer__row { background: #0f1320 !important; border-top: 1px solid #1e2740 !important; }',
+      '.ec-footer__link { color: #6b7394 !important; }',
     ].join('\n');
     document.head.appendChild(style);
   }
