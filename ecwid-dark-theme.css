@@ -35,17 +35,13 @@ html,body{background-color:#080b14 !important;color:#ffffff !important;}
 #ecwid-products p,#ecwid-products label,#ecwid-products li,#ecwid-products td{color:#ffffff !important;}
 .ec-text-muted,#ecwid-products .ec-text-muted{color:#8b9ac0 !important;}
 #ecwid-products .ec-price-item,#ecwid-products .details-product-price__value{color:#00d4ff !important;}
-img[alt="PLAY Barbados"],
-img[src*="header-daf642"],
-img[src*="6snMDJd"],
-.ins-header__logo-image,
-.ins-header__logo img,
-.ins-header img,
-header img,
-.site-header img
-{width:auto !important;height:90px !important;max-width:none !important;max-height:none !important;}
+img[alt="PLAY Barbados"],img[src*="header-daf642"],img[src*="6snMDJd"],.ins-header__logo-image,.ins-header__logo img,.ins-header img,header img,.site-header img{width:auto !important;height:90px !important;max-width:none !important;max-height:none !important;}
+.ins-header__logo,.ins-header__logo-wrap,.ins-header__logo-container{height:90px !important;max-height:none !important;overflow:visible !important;}
 .ins-header__menu-link,.ins-header__menu-link-title,.ins-header__menu-link span{color:#ffffff !important;font-weight:700 !important;}
 .ins-header__menu-link:hover .ins-header__menu-link-title,.ins-header__menu-link:hover{color:#00d4ff !important;}
+.ins-header__dropdown,.ins-header__menu-dropdown,.ins-header__submenu,.ins-header__dropdown-wrap,.ins-header__dropdown-inner{background-color:#0f1320 !important;border:1px solid #1e2740 !important;border-radius:8px !important;box-shadow:0 8px 32px rgba(0,0,0,0.5) !important;}
+.ins-header__dropdown a,.ins-header__dropdown-item,.ins-header__submenu a,.ins-header__menu-dropdown a{color:#ffffff !important;font-weight:500 !important;}
+.ins-header__dropdown a:hover,.ins-header__dropdown-item:hover,.ins-header__submenu a:hover,.ins-header__menu-dropdown a:hover{color:#00d4ff !important;background-color:#141927 !important;}
 .ins-tile,.ins-tile__body,.ins-tile__wrap,.ins-tile__headline,.ins-tile__text,.ins-layout,.ins-layout__content,.ins-tile__description{color:#ffffff !important;}
 .ins-tile a,.ins-tile__body a{color:#00d4ff !important;}
 .ins-tile a:hover{color:#a855f7 !important;}
