@@ -200,4 +200,48 @@
     window.ecwid_onBodyDone = function() { origDone(); setTimeout(init, 500); };
   }
 
+  // ===== DROPDOWN HOVER FIX =====
+(function() {
+  function fixDropdowns() {
+    var menuItems = document.querySelectorAll(
+      '.ins-header__menu-item, .ins-header__menu-link-wrap, .ins-header nav li'
+    );
+    
+    menuItems.forEach(function(item) {
+      var dropdown = item.querySelector(
+        '.ins-header__dropdown, .ins-header__menu-dropdown, .ins-header__submenu, ul'
+      );
+      if (!dropdown) return;
+      
+      var timeout;
+      
+      item.addEventListener('mouseenter', function() {
+        clearTimeout(timeout);
+        dropdown.style.display = 'block';
+        dropdown.style.opacity = '1';
+        dropdown.style.visibility = 'visible';
+        dropdown.style.pointerEvents = 'auto';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        timeout = setTimeout(function() {
+          dropdown.style.display = '';
+          dropdown.style.opacity = '';
+          dropdown.style.visibility = '';
+          dropdown.style.pointerEvents = '';
+        }, 200); // 200ms grace period
+      });
+    });
+  }
+  
+  // Run after page loads and again after Lightspeed renders
+  if (document.readyState === 'complete') {
+    fixDropdowns();
+  } else {
+    window.addEventListener('load', fixDropdowns);
+  }
+  setTimeout(fixDropdowns, 2000);
+  setTimeout(fixDropdowns, 4000);
+})();
+
 })();
