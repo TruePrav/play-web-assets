@@ -140,161 +140,43 @@
     window.ecwid_onBodyDone = function() { origDone(); setTimeout(init, 500); };
   }
 
-  /* ── 6. DROPDOWN HOVER FIX ────────────────────
-   *  Lightspeed renders .ins-header__dropdown as a SIBLING
-   *  of the menu, not a child. It's positioned absolutely via
-   *  --item-position-top (178px+) so there's a big gap.
-   *  Lightspeed's JS removes/hides the dropdown on mouseleave
-   *  from .ins-header__menu-link before the cursor reaches it.
-   *
-   *  Fix: intercept mouseleave at capture phase to block
-   *  Lightspeed's hide, use MutationObserver to re-show if
-   *  hidden, and add a ::before bridge on the dropdown.
+  /* ── 6. DROPDOWN FIX (CSS only) ───────────────
+   *  Lightspeed dropdowns work natively. The site CSS was
+   *  overriding their positioning (top, left, margin-top).
+   *  This injects corrective CSS to undo those overrides
+   *  while keeping the dark theme styling.
    * ─────────────────────────────────────────────── */
   (function() {
-    // 1) Inject CSS
     var style = document.createElement('style');
     style.id = 'play-dropdown-fix';
     style.textContent = [
-      /* Dropdown must accept pointer events */
-      '.ins-header__dropdown {',
-      '  pointer-events: auto !important;',
+      /* Undo position overrides — let Lightspeed handle placement */
+      '.ins-header__dropdown,',
+      '.ins-header__dropdown-wrap,',
+      '.ins-header__dropdown-inner {',
+      '  top: unset !important;',
+      '  left: unset !important;',
+      '  margin-top: unset !important;',
+      '  padding-top: unset !important;',
       '}',
-      /* Keep-open styling */
-      '.ins-header__dropdown.play-keep-open {',
-      '  display: flex !important;',
-      '  opacity: 1 !important;',
-      '  visibility: visible !important;',
-      '  pointer-events: auto !important;',
+      /* Keep the dark theme styling */
+      '.ins-header__dropdown,',
+      '.ins-header__dropdown-container,',
+      '.ins-header__dropdown-bg {',
+      '  background-color: #0f1320 !important;',
+      '  border: 1px solid #1e2740 !important;',
+      '  border-radius: 8px !important;',
+      '  box-shadow: 0 12px 40px rgba(0,0,0,0.7) !important;',
       '}',
-      /* Dropdown links */
-      '.ins-header__dropdown-link,',
       '.ins-header__dropdown-link-title {',
-      '  pointer-events: auto !important;',
+      '  color: #ffffff !important;',
+      '  font-weight: 500 !important;',
+      '}',
+      '.ins-header__dropdown-link-title:hover {',
+      '  color: #00d4ff !important;',
       '}',
     ].join('\n');
     document.head.appendChild(style);
-
-    // 2) JS: intercept Lightspeed's hide + keep dropdown alive
-    var keepAlive = false;
-    var hideTimer;
-    var isApplyingFix = false;
-
-    // Capture-phase: block Lightspeed's mouseleave handler on menu links
-    // so the dropdown stays visible while cursor travels to it
-    document.addEventListener('mouseleave', function(e) {
-      if (!e.isTrusted) return;
-      var menuLink = e.target.closest && e.target.closest('.ins-header__menu-link');
-      if (!menuLink) return;
-
-      var rect = menuLink.getBoundingClientRect();
-      // Only intercept if mouse left from bottom half (heading toward dropdown)
-      if (e.clientY >= rect.top + rect.height * 0.4) {
-        e.stopImmediatePropagation();
-        keepAlive = true;
-
-        hideTimer = setTimeout(function() {
-          keepAlive = false;
-          // Remove our keep-open class so dropdown can hide
-          var dd = document.querySelector('.ins-header__dropdown.play-keep-open');
-          if (dd) dd.classList.remove('play-keep-open');
-        }, 600);
-      }
-    }, true);
-
-    // Also block mouseout (which bubbles) during keep-alive
-    document.addEventListener('mouseout', function(e) {
-      if (!e.isTrusted) return;
-      var menuLink = e.target.closest && e.target.closest('.ins-header__menu-link');
-      if (menuLink && keepAlive) {
-        e.stopImmediatePropagation();
-      }
-    }, true);
-
-    // When mouse enters dropdown or its links, cancel hide
-    document.addEventListener('mouseover', function(e) {
-      var dropdown = e.target.closest && e.target.closest('.ins-header__dropdown');
-      if (dropdown) {
-        clearTimeout(hideTimer);
-        keepAlive = true;
-        // Only add keep-open to top-level dropdown (direct child of .ins-header__menu)
-        var menu = document.querySelector('.ins-header__menu');
-        if (menu && dropdown.parentElement === menu) {
-          dropdown.classList.add('play-keep-open');
-        }
-      }
-    }, true);
-
-    // When mouse leaves dropdown entirely, allow hide
-    document.addEventListener('mouseout', function(e) {
-      var dropdown = e.target.closest && e.target.closest('.ins-header__dropdown');
-      if (!dropdown) return;
-      var related = e.relatedTarget;
-      var stayingIn = related && related.closest &&
-        (related.closest('.ins-header__dropdown') || related.closest('.ins-header__menu-link'));
-      if (!stayingIn) {
-        keepAlive = false;
-        hideTimer = setTimeout(function() {
-          dropdown.classList.remove('play-keep-open');
-        }, 200);
-      }
-    }, true);
-
-    // When mouse enters a menu link, reset state
-    document.addEventListener('mouseover', function(e) {
-      var menuLink = e.target.closest && e.target.closest('.ins-header__menu-link');
-      if (menuLink) {
-        clearTimeout(hideTimer);
-        keepAlive = false;
-      }
-    }, true);
-
-    // 3) MutationObserver: if Lightspeed hides/removes the dropdown
-    //    while keepAlive is true, force it back open
-    function startObserving() {
-      var header = document.querySelector('.ins-header__menu');
-      if (!header) return;
-
-      var observer = new MutationObserver(function(mutations) {
-        if (!keepAlive || isApplyingFix) return;
-
-        var dropdown = document.querySelector('.ins-header__dropdown');
-        if (!dropdown) {
-          // Dropdown was removed from DOM — check if any mutation removed it
-          mutations.forEach(function(m) {
-            m.removedNodes.forEach(function(node) {
-              if (node.classList && node.classList.contains('ins-header__dropdown')) {
-                isApplyingFix = true;
-                m.target.appendChild(node);
-                node.classList.add('play-keep-open');
-                requestAnimationFrame(function() { isApplyingFix = false; });
-              }
-            });
-          });
-          return;
-        }
-
-        // Dropdown exists but may have been hidden via styles
-        var cs = window.getComputedStyle(dropdown);
-        if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.1) {
-          isApplyingFix = true;
-          dropdown.classList.add('play-keep-open');
-          requestAnimationFrame(function() { isApplyingFix = false; });
-        }
-      });
-
-      observer.observe(header, {
-        childList: true, subtree: true,
-        attributes: true, attributeFilter: ['style', 'class']
-      });
-    }
-
-    if (document.readyState === 'complete') {
-      startObserving();
-    } else {
-      window.addEventListener('load', startObserving);
-    }
-    setTimeout(startObserving, 2000);
   })();
 
 })();
