@@ -160,20 +160,8 @@
       '.ins-header__dropdown {',
       '  pointer-events: auto !important;',
       '}',
-      /* Invisible bridge — ONLY on the top-level dropdown (direct child of menu) */
-      '.ins-header__menu > .ins-header__dropdown::before {',
-      '  content: "" !important;',
-      '  position: absolute !important;',
-      '  left: -40px !important;',
-      '  right: -40px !important;',
-      '  top: -100px !important;',
-      '  height: 100px !important;',
-      '  background: transparent !important;',
-      '  pointer-events: auto !important;',
-      '  z-index: 9998 !important;',
-      '}',
-      /* Keep-open styling — ONLY on the top-level dropdown */
-      '.ins-header__menu > .ins-header__dropdown.play-keep-open {',
+      /* Keep-open styling */
+      '.ins-header__dropdown.play-keep-open {',
       '  display: flex !important;',
       '  opacity: 1 !important;',
       '  visibility: visible !important;',
