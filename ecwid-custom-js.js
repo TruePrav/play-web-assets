@@ -20,12 +20,7 @@
   fontLink.href = 'https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500;600&display=swap';
   document.head.appendChild(fontLink);
 
-  /* ── 2. ANIMATED TICKER BAR (disabled) ────────── */
-  function insertTicker() {
-    // Ticker removed — was blocking dropdown subcategories
-  }
-
-  /* ── 3. FORCE INTER FONT ON PRODUCT ELEMENTS ── */
+  /* ── 2. FORCE INTER FONT ON PRODUCT ELEMENTS ── */
   function applyFonts() {
     var fontStyle = document.createElement('style');
     fontStyle.textContent = [
@@ -119,7 +114,6 @@
   function init() {
     applyFonts();
     forceDarkContainers();
-    insertTicker();
     insertWhatsAppButton();
   }
 
@@ -139,44 +133,5 @@
     var origDone = window.ecwid_onBodyDone;
     window.ecwid_onBodyDone = function() { origDone(); setTimeout(init, 500); };
   }
-
-  /* ── 6. DROPDOWN FIX (CSS only) ───────────────
-   *  Lightspeed dropdowns work natively. The site CSS was
-   *  overriding their positioning (top, left, margin-top).
-   *  This injects corrective CSS to undo those overrides
-   *  while keeping the dark theme styling.
-   * ─────────────────────────────────────────────── */
-  (function() {
-    var style = document.createElement('style');
-    style.id = 'play-dropdown-fix';
-    style.textContent = [
-      /* Undo position overrides — let Lightspeed handle placement */
-      '.ins-header__dropdown,',
-      '.ins-header__dropdown-wrap,',
-      '.ins-header__dropdown-inner {',
-      '  top: unset !important;',
-      '  left: unset !important;',
-      '  margin-top: unset !important;',
-      '  padding-top: unset !important;',
-      '}',
-      /* Keep the dark theme styling */
-      '.ins-header__dropdown,',
-      '.ins-header__dropdown-container,',
-      '.ins-header__dropdown-bg {',
-      '  background-color: #0f1320 !important;',
-      '  border: 1px solid #1e2740 !important;',
-      '  border-radius: 8px !important;',
-      '  box-shadow: 0 12px 40px rgba(0,0,0,0.7) !important;',
-      '}',
-      '.ins-header__dropdown-link-title {',
-      '  color: #ffffff !important;',
-      '  font-weight: 500 !important;',
-      '}',
-      '.ins-header__dropdown-link-title:hover {',
-      '  color: #00d4ff !important;',
-      '}',
-    ].join('\n');
-    document.head.appendChild(style);
-  })();
 
 })();
