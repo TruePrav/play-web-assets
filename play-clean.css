@@ -32,10 +32,12 @@ img[alt="PLAY Barbados"],img[src*="header-daf642"],img[src*="6snMDJd"],.ins-head
 .ins-header__menu-link,.ins-header__menu-link-title,.ins-header__menu-link span{color:#ffffff !important;font-weight:700 !important;}
 .ins-header__menu-link:hover .ins-header__menu-link-title,.ins-header__menu-link:hover{color:#00d4ff !important;}
 
-/* ── Dropdown menus — ONLY styling, NO positioning ── */
-.ins-header__dropdown,.ins-header__menu-dropdown,.ins-header__submenu,.ins-header__dropdown-wrap,.ins-header__dropdown-inner{background-color:#0f1320 !important;border:1px solid #1e2740 !important;border-radius:8px !important;box-shadow:0 8px 32px rgba(0,0,0,0.5) !important;z-index:9999 !important;}
-.ins-header__dropdown a,.ins-header__dropdown-item,.ins-header__submenu a,.ins-header__menu-dropdown a{color:#ffffff !important;font-weight:500 !important;}
-.ins-header__dropdown a:hover,.ins-header__dropdown-item:hover,.ins-header__submenu a:hover,.ins-header__menu-dropdown a:hover{color:#00d4ff !important;background-color:#141927 !important;}
+/* ── Dropdown menus — ONLY style the outer container ── */
+.ins-header__dropdown{background-color:#0f1320 !important;border:1px solid #1e2740 !important;border-radius:8px !important;box-shadow:0 8px 32px rgba(0,0,0,0.5) !important;z-index:9999 !important;}
+/* Inner wrappers must be transparent — no extra backgrounds or borders */
+.ins-header__dropdown-container,.ins-header__dropdown-wrap,.ins-header__dropdown-bg,.ins-header__dropdown-inner{background:transparent !important;border:none !important;box-shadow:none !important;border-radius:0 !important;}
+.ins-header__dropdown a,.ins-header__dropdown-item{color:#ffffff !important;font-weight:500 !important;}
+.ins-header__dropdown a:hover,.ins-header__dropdown-item:hover{color:#00d4ff !important;background-color:#141927 !important;}
 
 /* ── Product components (Instant Site) ── */
 .ins-component__items{background:transparent !important;}
