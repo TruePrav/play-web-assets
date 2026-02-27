@@ -200,48 +200,117 @@
     window.ecwid_onBodyDone = function() { origDone(); setTimeout(init, 500); };
   }
 
-  // ===== DROPDOWN HOVER FIX =====
-(function() {
-  function fixDropdowns() {
-    var menuItems = document.querySelectorAll(
-      '.ins-header__menu-item, .ins-header__menu-link-wrap, .ins-header nav li'
-    );
-    
-    menuItems.forEach(function(item) {
-      var dropdown = item.querySelector(
-        '.ins-header__dropdown, .ins-header__menu-dropdown, .ins-header__submenu, ul'
+  /* ── 6. DROPDOWN HOVER FIX ────────────────────
+   *  CSS-driven approach: :hover rules with !important
+   *  can't be overridden by Lightspeed's own JS.
+   *  JS backup adds a class + delay for extra safety.
+   * ─────────────────────────────────────────────── */
+  (function() {
+    // 1) Inject CSS rules that force-show dropdown on hover
+    var dropdownCSS = document.createElement('style');
+    dropdownCSS.id = 'play-dropdown-fix';
+    dropdownCSS.textContent = [
+      /* Parent items need relative positioning */
+      '.ins-header__menu-item,',
+      '.ins-header__menu-link-wrap {',
+      '  position: relative !important;',
+      '}',
+
+      /* CSS-driven show on :hover — the main fix */
+      '.ins-header__menu-item:hover > .ins-header__dropdown,',
+      '.ins-header__menu-item:hover > .ins-header__menu-dropdown,',
+      '.ins-header__menu-item:hover > .ins-header__submenu,',
+      '.ins-header__menu-item:hover > .ins-header__dropdown-wrap,',
+      '.ins-header__menu-link-wrap:hover > .ins-header__dropdown,',
+      '.ins-header__menu-link-wrap:hover > .ins-header__menu-dropdown,',
+      '.ins-header__menu-link-wrap:hover > .ins-header__submenu,',
+      '.ins-header__menu-link-wrap:hover > .ins-header__dropdown-wrap,',
+      /* deeper descendants in case of wrapper nesting */
+      '.ins-header__menu-item:hover .ins-header__dropdown,',
+      '.ins-header__menu-item:hover .ins-header__menu-dropdown,',
+      '.ins-header__menu-item:hover .ins-header__submenu,',
+      '.ins-header__menu-link-wrap:hover .ins-header__dropdown,',
+      '.ins-header__menu-link-wrap:hover .ins-header__menu-dropdown,',
+      '.ins-header__menu-link-wrap:hover .ins-header__submenu,',
+      /* also honour the JS-added class for the delay window */
+      '.ins-header__menu-item.play-hover .ins-header__dropdown,',
+      '.ins-header__menu-item.play-hover .ins-header__menu-dropdown,',
+      '.ins-header__menu-item.play-hover .ins-header__submenu,',
+      '.ins-header__menu-link-wrap.play-hover .ins-header__dropdown,',
+      '.ins-header__menu-link-wrap.play-hover .ins-header__menu-dropdown,',
+      '.ins-header__menu-link-wrap.play-hover .ins-header__submenu {',
+      '  display: block !important;',
+      '  opacity: 1 !important;',
+      '  visibility: visible !important;',
+      '  pointer-events: auto !important;',
+      '  max-height: none !important;',
+      '  overflow: visible !important;',
+      '  transform: none !important;',
+      '  clip: auto !important;',
+      '  clip-path: none !important;',
+      '}',
+
+      /* Dropdown flush positioning */
+      '.ins-header__dropdown,',
+      '.ins-header__menu-dropdown,',
+      '.ins-header__submenu,',
+      '.ins-header__dropdown-wrap {',
+      '  position: absolute !important;',
+      '  top: 100% !important;',
+      '  left: 0 !important;',
+      '  margin-top: 0 !important;',
+      '  padding-top: 0 !important;',
+      '  z-index: 9999 !important;',
+      '}',
+
+      /* Invisible bridge — covers any pixel gap between */
+      /* the nav link and the dropdown panel              */
+      '.ins-header__menu-item::after,',
+      '.ins-header__menu-link-wrap::after {',
+      '  content: "" !important;',
+      '  position: absolute !important;',
+      '  left: -20px !important;',
+      '  right: -20px !important;',
+      '  bottom: -20px !important;',
+      '  height: 20px !important;',
+      '  background: transparent !important;',
+      '  z-index: 9998 !important;',
+      '  pointer-events: auto !important;',
+      '}',
+    ].join('\n');
+    document.head.appendChild(dropdownCSS);
+
+    // 2) JS backup: add .play-hover class with 400ms removal delay
+    //    so the dropdown stays visible while the cursor crosses any gap
+    function bindHoverClass() {
+      var items = document.querySelectorAll(
+        '.ins-header__menu-item, .ins-header__menu-link-wrap'
       );
-      if (!dropdown) return;
-      
-      var timeout;
-      
-      item.addEventListener('mouseenter', function() {
-        clearTimeout(timeout);
-        dropdown.style.display = 'block';
-        dropdown.style.opacity = '1';
-        dropdown.style.visibility = 'visible';
-        dropdown.style.pointerEvents = 'auto';
+      items.forEach(function(item) {
+        if (item.dataset.playHoverBound) return; // don't double-bind
+        item.dataset.playHoverBound = '1';
+
+        var timer;
+        item.addEventListener('mouseenter', function() {
+          clearTimeout(timer);
+          item.classList.add('play-hover');
+        });
+        item.addEventListener('mouseleave', function() {
+          timer = setTimeout(function() {
+            item.classList.remove('play-hover');
+          }, 400);
+        });
       });
-      
-      item.addEventListener('mouseleave', function() {
-        timeout = setTimeout(function() {
-          dropdown.style.display = '';
-          dropdown.style.opacity = '';
-          dropdown.style.visibility = '';
-          dropdown.style.pointerEvents = '';
-        }, 200); // 200ms grace period
-      });
-    });
-  }
-  
-  // Run after page loads and again after Lightspeed renders
-  if (document.readyState === 'complete') {
-    fixDropdowns();
-  } else {
-    window.addEventListener('load', fixDropdowns);
-  }
-  setTimeout(fixDropdowns, 2000);
-  setTimeout(fixDropdowns, 4000);
-})();
+    }
+
+    // Run after page loads + re-run for Lightspeed async rendering
+    if (document.readyState === 'complete') {
+      bindHoverClass();
+    } else {
+      window.addEventListener('load', bindHoverClass);
+    }
+    setTimeout(bindHoverClass, 2000);
+    setTimeout(bindHoverClass, 5000);
+  })();
 
 })();
