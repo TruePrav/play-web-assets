@@ -160,8 +160,8 @@
       '.ins-header__dropdown {',
       '  pointer-events: auto !important;',
       '}',
-      /* Invisible bridge above dropdown to cover the gap to the nav bar */
-      '.ins-header__dropdown::before {',
+      /* Invisible bridge — ONLY on the top-level dropdown (direct child of menu) */
+      '.ins-header__menu > .ins-header__dropdown::before {',
       '  content: "" !important;',
       '  position: absolute !important;',
       '  left: -40px !important;',
@@ -172,8 +172,8 @@
       '  pointer-events: auto !important;',
       '  z-index: 9998 !important;',
       '}',
-      /* Dropdown styling when kept open by our fix */
-      '.ins-header__dropdown.play-keep-open {',
+      /* Keep-open styling — ONLY on the top-level dropdown */
+      '.ins-header__menu > .ins-header__dropdown.play-keep-open {',
       '  display: flex !important;',
       '  opacity: 1 !important;',
       '  visibility: visible !important;',
@@ -229,7 +229,11 @@
       if (dropdown) {
         clearTimeout(hideTimer);
         keepAlive = true;
-        dropdown.classList.add('play-keep-open');
+        // Only add keep-open to top-level dropdown (direct child of .ins-header__menu)
+        var menu = document.querySelector('.ins-header__menu');
+        if (menu && dropdown.parentElement === menu) {
+          dropdown.classList.add('play-keep-open');
+        }
       }
     }, true);
 
