@@ -20,70 +20,9 @@
   fontLink.href = 'https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500;600&display=swap';
   document.head.appendChild(fontLink);
 
-  /* ── 2. ANIMATED TICKER BAR ─────────────────── */
+  /* ── 2. ANIMATED TICKER BAR (disabled) ────────── */
   function insertTicker() {
-    // Don't insert twice
-    if (document.getElementById('play-ticker')) return;
-
-    var items = [
-      '🎮 New PS5 Titles In Stock',
-      '🟢 Xbox Game Pass Gift Cards Available',
-      '🔴 Nintendo eShop Cards — All Denominations',
-      '📍 Two Locations: Colonnade Mall & Sheraton Centre',
-      '📞 Call Us: 431-0750',
-      '🎁 Gift Cards for Every Platform — Instant Delivery',
-      '🕹️ Pre-Orders Now Open — Ask In Store',
-      '💳 Visa · Mastercard · AmEx · Cash Accepted',
-    ];
-
-    // Build ticker HTML
-    var itemsHTML = items.concat(items) // duplicate for seamless loop
-      .map(function(t) { return '<span class="play-ticker__item">' + t + '</span>'; })
-      .join('');
-
-    var ticker = document.createElement('div');
-    ticker.id = 'play-ticker';
-    ticker.innerHTML = '<div class="play-ticker__inner">' + itemsHTML + '</div>';
-
-    // Inject into page — try to insert after nav/header
-    var header = document.querySelector('.site-header') || document.querySelector('header') || document.body.firstChild;
-    if (header && header.parentNode) {
-      header.parentNode.insertBefore(ticker, header.nextSibling);
-    } else {
-      document.body.insertBefore(ticker, document.body.firstChild);
-    }
-
-    // Inject ticker CSS
-    var style = document.createElement('style');
-    style.textContent = [
-      '#play-ticker {',
-      '  background: #7c3aed;',
-      '  overflow: hidden;',
-      '  padding: 10px 0;',
-      '  border-top: 1px solid rgba(255,255,255,0.1);',
-      '  border-bottom: 1px solid rgba(0,0,0,0.2);',
-      '  position: relative;',
-      '  z-index: 999;',
-      '}',
-      '.play-ticker__inner {',
-      '  display: inline-flex;',
-      '  gap: 56px;',
-      '  white-space: nowrap;',
-      '  animation: play-scroll 30s linear infinite;',
-      '}',
-      '.play-ticker__item {',
-      '  font-size: 12px;',
-      '  font-weight: 600;',
-      '  letter-spacing: 1.5px;',
-      '  text-transform: uppercase;',
-      '  color: rgba(255,255,255,0.92);',
-      '}',
-      '@keyframes play-scroll {',
-      '  from { transform: translateX(0); }',
-      '  to   { transform: translateX(-50%); }',
-      '}',
-    ].join('\n');
-    document.head.appendChild(style);
+    // Ticker removed — was blocking dropdown subcategories
   }
 
   /* ── 3. FORCE INTER FONT ON PRODUCT ELEMENTS ── */
