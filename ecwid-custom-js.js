@@ -12,6 +12,7 @@
 
 (function() {
   'use strict';
+  console.log('[PLAY JS] v2.1 loaded — ' + new Date().toLocaleTimeString());
 
   /* ── 1. GOOGLE FONTS ────────────────────────── */
   var fontLink = document.createElement('link');
